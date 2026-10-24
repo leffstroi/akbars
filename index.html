@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Акбарс — Онлайн-заказы</title>
+<style>
+:root {
+  --gold: #D4AF37;
+  --olive: #BDB76B;
+  --cream: #FDFBD4;
+  --orange: #CE8946;
+  --bg: #FFFEF8;
+  --card: #FFFFFF;
+  --text: #2C2A24;
+  --muted: #7A7568;
+  --border: #E8E4D4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(255,254,248,.95);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+.logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+.logo span { color: var(--orange); }
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  margin-left: 1.4rem;
+  font-size: 0.95rem;
+  transition: color .2s;
+}
+nav a:hover { color: var(--text); }
+.hero {
+  padding: 3.5rem 1.5rem 2.5rem;
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.hero p { color: var(--muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 1.8rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold);
+  color: #2C2A24;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(212,175,55,.35); }
+.btn:active { transform: translateY(0); }
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  margin-left: 0.6rem;
+}
+.btn-outline:hover { background: var(--cream); box-shadow: none; }
+.categories {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 1.5rem 1.5rem;
+}
+.cat-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all .2s;
+}
+.cat-btn.active, .cat-btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #2C2A24;
+}
+.venues {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.1rem;
+  padding: 0 1.5rem 3rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.venue-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.venue-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 28px rgba(44,42,36,.08);
+}
+.venue-img {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  background: var(--cream);
+}
+.venue-info { padding: 1rem; }
+.venue-info h3 { font-size: 1.05rem; margin-bottom: 0.2rem; }
+.venue-info p { color: var(--muted); font-size: 0.82rem; }
+.badge {
+  display: inline-block;
+  background: rgba(212,175,55,.18);
+  color: #8A6F1A;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  margin-top: 0.4rem;
+}
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(44,42,36,.45);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal.open { display: flex; }
+.modal-content {
+  background: var(--card);
+  border-radius: 18px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 1.4rem;
+  border: 1px solid var(--border);
+  animation: slideUp .22s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.close {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.menu-item button {
+  background: var(--gold);
+  color: #2C2A24;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cart { margin-top: 1.2rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.order-form input, .order-form textarea {
+  width: 100%;
+  background: #FFFEF8;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.7rem;
+  border-radius: 8px;
+  margin-bottom: 0.65rem;
+  font-size: 0.95rem;
+}
+.success { text-align: center; padding: 1.5rem 0.5rem; }
+.success h3 { color: var(--orange); margin-bottom: 0.4rem; }
+#how {
+  padding: 1.5rem 1.5rem 3.5rem;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+#how h2 { font-size: 1.6rem; margin-bottom: 1.2rem; }
+.step {
+  background: var(--card);
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+  margin-bottom: 0.7rem;
+}
+.step strong { color: var(--orange); margin-right: 0.4rem; }
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Ак<span>барс</span></div>
+  <nav>
+    <a href="#venues">Заведения</a>
+    <a href="#how">Как работает</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Заказы без чатов</h1>
+  <p>Онлайн-меню, заказы и запись для кафе, ресторанов, барбершопов и магазинов.</p>
+  <button class="btn" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">Смотреть заведения</button>
+  <a class="btn btn-outline" href="#how">Как это работает</a>
+</section>
+
+<div class="categories">
+  <button class="cat-btn active" data-cat="all">Все</button>
+  <button class="cat-btn" data-cat="cafe">Кафе</button>
+  <button class="cat-btn" data-cat="restaurant">Рестораны</button>
+  <button class="cat-btn" data-cat="barber">Барбершопы</button>
+  <button class="cat-btn" data-cat="shop">Магазины</button>
+</div>
+
+<section class="venues" id="venues"></section>
+
+<section id="how">
+  <h2>Как работает</h2>
+  <div class="step"><strong>01</strong> Бизнес добавляет меню и цены</div>
+  <div class="step"><strong>02</strong> Клиент открывает сайт и выбирает заведение</div>
+  <div class="step"><strong>03</strong> Оформляет заказ или запись</div>
+  <div class="step"><strong>04</strong> Бизнес получает уведомление в Telegram</div>
+</section>
+
+<footer>Акбарс · Команда 67 · SkillLab AI Hackathon 2026</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const venues = [
+  { id:1, name:"Кыргызым", cat:"cafe", emoji:"🥟", desc:"Национальная кухня · Бишкек", menu:[{name:"Самса слоёная",price:65},{name:"Манты",price:40},{name:"Плов 1.0",price:280},{name:"Шорпо",price:290},{name:"Чай",price:30}] },
+  { id:2, name:"Coffee Lab", cat:"cafe", emoji:"☕", desc:"Кофе и десерты · Ош", menu:[{name:"Капучино",price:150},{name:"Латте",price:160},{name:"Чизкейк",price:220},{name:"Круассан",price:120}] },
+  { id:3, name:"Navoi Grill", cat:"restaurant", emoji:"🍖", desc:"Гриль и шашлык · Бишкек", menu:[{name:"Шашлык баранина",price:450},{name:"Люля-кебаб",price:380},{name:"Салат овощной",price:180},{name:"Хлеб",price:25}] },
+  { id:4, name:"Plov House", cat:"restaurant", emoji:"🍚", desc:"Узбекская кухня · Ош", menu:[{name:"Плов узбекский",price:320},{name:"Лагман",price:280},{name:"Самса",price:70}] },
+  { id:5, name:"Barber 67", cat:"barber", emoji:"✂️", desc:"Мужская стрижка · Бишкек", menu:[{name:"Стрижка",price:400},{name:"Борода",price:250},{name:"Комплекс",price:550}] },
+  { id:6, name:"Fade Room", cat:"barber", emoji:"💈", desc:"Барбершоп · Бишкек", menu:[{name:"Стрижка fade",price:450},{name:"Укладка",price:200},{name:"Борода + стрижка",price:600}] },
+  { id:7, name:"Green Market", cat:"shop", emoji:"🛒", desc:"Продукты · Бишкек", menu:[{name:"Молоко 1л",price:85},{name:"Хлеб",price:30},{name:"Яйца 10шт",price:120},{name:"Сыр",price:180}] },
+  { id:8, name:"Smoothie Bar", cat:"cafe", emoji:"🥤", desc:"Смузи и здоровое питание", menu:[{name:"Смузи ягодный",price:200},{name:"Смузи зелёный",price:190},{name:"Тост авокадо",price:220}] }
+];
+
+let cart = [];
+let currentVenue = null;
+
+function renderVenues(filter = "all") {
+  const el = document.getElementById("venues");
+  el.innerHTML = venues
+    .filter(v => filter === "all" || v.cat === filter)
+    .map(v => `
+      <div class="venue-card" onclick="openVenue(${v.id})">
+        <div class="venue-img">${v.emoji}</div>
+        <div class="venue-info">
+          <h3>${v.name}</h3>
+          <p>${v.desc}</p>
+          <span class="badge">${v.cat === "barber" ? "Запись" : "Заказ"}</span>
+        </div>
+      </div>
+    `).join("");
+}
+
+function openVenue(id) {
+  currentVenue = venues.find(v => v.id === id);
+  cart = [];
+  showModal();
+}
+
+function showModal() {
+  const body = document.getElementById("modal-body");
+  body.innerHTML = `
+    <h2>${currentVenue.name}</h2>
+    <p style="color:var(--muted);margin-bottom:0.8rem;">${currentVenue.desc}</p>
+    <div>
+      ${currentVenue.menu.map((item, i) => `
+        <div class="menu-item">
+          <div>
+            <div>${item.name}</div>
+            <div style="color:var(--muted);font-size:0.82rem;">${item.price} сом</div>
+          </div>
+          <button onclick="addToCart(${i})">+</button>
+        </div>
+      `).join("")}
+    </div>
+    <div class="cart" id="cart-section"></div>
+  `;
+  document.getElementById("modal").classList.add("open");
+  updateCart();
+}
+
+function addToCart(index) {
+  const item = currentVenue.menu[index];
+  const existing = cart.find(c => c.name === item.name);
+  if (existing) existing.qty++;
+  else cart.push({ ...item, qty: 1 });
+  updateCart();
+}
+
+function updateCart() {
+  const section = document.getElementById("cart-section");
+  if (!section) return;
+  if (cart.length === 0) {
+    section.innerHTML = "<p style='color:var(--muted);'>Корзина пуста</p>";
+    return;
+  }
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  section.innerHTML = `
+    <h3 style="margin-bottom:0.6rem;">Корзина</h3>
+    ${cart.map(i => `<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:0.92rem;"><span>${i.name} × ${i.qty}</span><span>${i.price * i.qty} сом</span></div>`).join("")}
+    <div style="font-weight:600;margin:0.6rem 0;">Итого: ${total} сом</div>
+    <div class="order-form">
+      <input type="text" id="clientName" placeholder="Ваше имя">
+      <input type="text" id="clientPhone" placeholder="Телефон">
+      <textarea id="clientComment" placeholder="Комментарий (необязательно)" rows="2"></textarea>
+      <button class="btn" style="width:100%;" onclick="placeOrder()">Оформить ${currentVenue.cat === "barber" ? "запись" : "заказ"}</button>
+    </div>
+  `;
+}
+
+function placeOrder() {
+  const name = document.getElementById("clientName").value.trim();
+  const phone = document.getElementById("clientPhone").value.trim();
+  if (!name || !phone) { alert("Укажите имя и телефон"); return; }
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById("modal-body").innerHTML = `
+    <div class="success">
+      <h3>Заказ принят</h3>
+      <p>${currentVenue.name}</p>
+      <p style="margin:0.6rem 0;">Сумма: ${total} сом</p>
+      <p style="color:var(--muted);font-size:0.88rem;">В полной версии уведомление уйдёт владельцу в Telegram.</p>
+      <button class="btn" style="margin-top:1rem;" onclick="closeModal()">Закрыть</button>
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+}
+
+document.querySelectorAll(".cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderVenues(btn.dataset.cat);
+  });
+});
+
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target.id === "modal") closeModal();
+});
+
+renderVenues();
+</script>
+</body>
+</html>
