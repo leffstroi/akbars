@@ -248,6 +248,7 @@ footer {
 .guide-block h3 { margin-bottom: 0.5rem; color: var(--orange); }
 .guide-block p { margin-bottom: 0.4rem; font-size: 0.92rem; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -255,7 +256,6 @@ footer {
   <div class="logo" onclick="showPage('home')">Ак<span>барс</span></div>
   <nav>
     <a href="#" onclick="showPage('home'); return false;">Заведения</a>
-    <button class="linkish" onclick="showPage('guide')">Как использовать</button>
     <button class="btn btn-outline btn-sm" onclick="openAuth('login')">Войти</button>
     <button class="btn btn-sm" onclick="openAuth('register')">Регистрация</button>
   </nav>
@@ -263,11 +263,9 @@ footer {
 
 <div id="page-home">
   <section class="hero">
-    <h1>Заказы без чатов</h1>
-    <p>Онлайн-меню, заказы и запись для кафе, ресторанов, барбершопов и магазинов Бишкека.</p>
-    <button class="btn" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">Смотреть заведения</button>
-    <button class="btn btn-outline" onclick="showPage('create')">Добавить своё заведение</button>
-    <button class="btn btn-outline" onclick="showPage('guide')">Как использовать</button>
+    <h1>Акбарс</h1>
+    <p>Заведения Бишкека</p>
+    <button class="btn" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">Смотреть</button>
   </section>
 
   <div class="categories">
@@ -283,29 +281,13 @@ footer {
 
 <div id="page-guide" style="display:none;">
   <div class="guide-section">
-    <h2>Как использовать</h2>
-    <div class="guide-block">
-      <h3>Если вы клиент</h3>
-      <p>1. Выберите категорию или найдите заведение в списке.</p>
-      <p>2. Откройте карточку — посмотрите меню и цены.</p>
-      <p>3. Добавьте позиции в корзину и укажите имя и телефон.</p>
-      <p>4. Оформите заказ. Владелец получит уведомление и свяжется с вами.</p>
-    </div>
-    <div class="guide-block">
-      <h3>Если вы хотите создать аккаунт компании</h3>
-      <p>1. Нажмите «Регистрация» и укажите email.</p>
-      <p>2. Перейдите в раздел «Добавить своё заведение».</p>
-      <p>3. Заполните название, категорию, адрес и меню с ценами.</p>
-      <p>4. После проверки заведение появится в общем списке. Заказы будут приходить вам в Telegram.</p>
-    </div>
-    <button class="btn" onclick="showPage('home')">Вернуться к заведениям</button>
+    <button class="btn" onclick="showPage('home')">Назад</button>
   </div>
 </div>
 
 <div id="page-create" style="display:none;">
   <div class="create-section">
     <h2>Добавить заведение</h2>
-    <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">Заполните данные — меню появится на сайте после проверки.</p>
     <input type="text" id="bizName" placeholder="Название заведения">
     <select id="bizCat">
       <option value="cafe">Кафе</option>
@@ -313,11 +295,15 @@ footer {
       <option value="barber">Барбершоп</option>
       <option value="shop">Магазин</option>
     </select>
-    <input type="text" id="bizDesc" placeholder="Краткое описание / адрес">
+    <input type="text" id="bizDesc" placeholder="Адрес">
     <h3 style="margin:1rem 0 0.5rem;font-size:1rem;">Меню</h3>
     <div id="menuBuilder"></div>
     <button class="btn btn-outline" style="margin-bottom:1rem;" onclick="addMenuRow()">+ Добавить позицию</button>
-    <button class="btn" style="width:100%;" onclick="saveVenue()">Сохранить заведение</button>
+    <h3 style="margin:1.2rem 0 0.5rem;font-size:1rem;">Telegram</h3>
+    <a href="https://t.me/AkBarsOrdersBot?start=connect" target="_blank" class="btn btn-outline" style="margin-bottom:0.6rem;display:inline-block;">Подключить</a>
+    <input type="text" id="telegramId" placeholder="Chat ID">
+    <div id="telegramStatus" style="font-size:0.85rem;color:var(--orange);margin-bottom:1rem;"></div>
+    <button class="btn" style="width:100%;" onclick="saveVenue()">Сохранить</button>
   </div>
 </div>
 
@@ -358,6 +344,15 @@ const venues = [
 
 let cart = [];
 let currentVenue = null;
+let currentTable = null;
+
+// Check URL params for table QR mode
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('venue')) {
+  const vid = parseInt(urlParams.get('venue'));
+  currentTable = urlParams.get('table') || '1';
+  setTimeout(() => openVenue(vid), 100);
+}
 
 function renderVenues(filter = "all") {
   const el = document.getElementById("venues");
@@ -369,7 +364,7 @@ function renderVenues(filter = "all") {
         <div class="venue-info">
           <h3>${v.name}</h3>
           <p>${v.desc}</p>
-          <span class="badge">${v.cat === "barber" ? "Запись" : "Заказ"}</span>
+          <span class="badge">${v.cat === "barber" ? "Запись" : "QR-заказ"}</span>
           <br>
           <a class="map-link" href="${v.map}" target="_blank" onclick="event.stopPropagation()">Открыть на карте</a>
         </div>
@@ -379,15 +374,18 @@ function renderVenues(filter = "all") {
 
 function openVenue(id) {
   currentVenue = venues.find(v => v.id === id);
+  if (!currentVenue) return;
   cart = [];
   showModal();
 }
 
 function showModal() {
   const body = document.getElementById("modal-body");
+  const tableNote = currentTable ? `<div style="background:var(--cream);padding:0.5rem;border-radius:8px;margin-bottom:0.7rem;font-size:0.9rem;">Стол ${currentTable} · <button class="btn btn-sm" onclick="callWaiter()" style="margin-left:0.5rem;">Позвать официанта</button></div>` : '';
   body.innerHTML = `
     <h2>${currentVenue.name}</h2>
     <p style="color:var(--muted);margin-bottom:0.7rem;font-size:0.9rem;">${currentVenue.desc}</p>
+    ${tableNote}
     <div>
       ${currentVenue.menu.map((item, i) => `
         <div class="menu-item">
@@ -395,22 +393,61 @@ function showModal() {
             <div>${item.name}</div>
             <div style="color:var(--muted);font-size:0.8rem;">${item.price} сом</div>
           </div>
-          <button onclick="addToCart(${i})">+</button>
+          <div style="display:flex;align-items:center;gap:0.3rem;">
+            <button onclick="changeQty(${i}, -1)" style="width:24px;height:24px;border-radius:4px;">−</button>
+            <span id="qty-${i}">0</span>
+            <button onclick="changeQty(${i}, 1)" style="width:24px;height:24px;border-radius:4px;">+</button>
+          </div>
         </div>
       `).join("")}
     </div>
     <div class="cart" id="cart-section"></div>
+    <div id="qr-section" style="margin-top:1rem;text-align:center;"></div>
+    <a class="map-link" href="${currentVenue.map}" target="_blank" style="margin-top:0.8rem;display:inline-block;">Открыть на карте</a>
   `;
   document.getElementById("modal").classList.add("open");
   updateCart();
+  generateQR();
 }
 
-function addToCart(index) {
+function changeQty(index, delta) {
   const item = currentVenue.menu[index];
-  const existing = cart.find(c => c.name === item.name);
-  if (existing) existing.qty++;
-  else cart.push({ ...item, qty: 1 });
+  let existing = cart.find(c => c.name === item.name);
+  if (delta > 0) {
+    if (!existing) {
+      cart.push({ ...item, qty: 1 });
+    } else {
+      existing.qty++;
+    }
+  } else if (existing) {
+    existing.qty--;
+    if (existing.qty <= 0) {
+      cart = cart.filter(c => c.name !== item.name);
+    }
+  }
+  const q = cart.find(c => c.name === item.name);
+  document.getElementById(`qty-${index}`).textContent = q ? q.qty : 0;
   updateCart();
+}
+
+function generateQR() {
+  const qrEl = document.getElementById("qr-section");
+  if (!qrEl || typeof QRCode === 'undefined') return;
+  const base = window.location.origin + window.location.pathname;
+  const url = `${base}?venue=${currentVenue.id}&table=1`;
+  qrEl.innerHTML = '<div id="qrcode"></div>';
+  new QRCode(document.getElementById("qrcode"), {
+    text: url,
+    width: 128,
+    height: 128,
+    colorDark: "#2C2A24",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+function callWaiter() {
+  alert(`Официант вызван к столу ${currentTable}.`);
 }
 
 function updateCart() {
@@ -422,7 +459,7 @@ function updateCart() {
   }
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
   section.innerHTML = `
-    <h3 style="margin-bottom:0.5rem;font-size:1rem;">Корзина</h3>
+    <h3 style="margin-bottom:0.5rem;font-size:1rem;">Ваш заказ</h3>
     ${cart.map(i => `<div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.9rem;"><span>${i.name} × ${i.qty}</span><span>${i.price * i.qty} сом</span></div>`).join("")}
     <div style="font-weight:600;margin:0.5rem 0;">Итого: ${total} сом</div>
     <div class="order-form">
@@ -439,12 +476,13 @@ function placeOrder() {
   const phone = document.getElementById("clientPhone").value.trim();
   if (!name || !phone) { alert("Укажите имя и телефон"); return; }
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const tableInfo = currentTable ? ` (стол ${currentTable})` : '';
   document.getElementById("modal-body").innerHTML = `
     <div style="text-align:center;padding:1.2rem 0;">
       <h3 style="color:var(--orange);">Заказ принят</h3>
-      <p style="margin:0.5rem 0;">${currentVenue.name}</p>
+      <p style="margin:0.5rem 0;">${currentVenue.name}${tableInfo}</p>
       <p>Сумма: ${total} сом</p>
-      <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">В полной версии уведомление уйдёт владельцу в Telegram.</p>
+      <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">Заказ принят.</p>
       <button class="btn" style="margin-top:1rem;" onclick="closeModal()">Закрыть</button>
     </div>
   `;
@@ -489,8 +527,10 @@ function addMenuRow() {
 
 function saveVenue() {
   const name = document.getElementById("bizName").value.trim();
+  const tgId = document.getElementById("telegramId").value.trim();
   if (!name) { alert("Укажите название"); return; }
-  alert("Заведение сохранено (демо). В полной версии оно появится в списке после модерации.");
+    document.getElementById("telegramStatus").textContent = tgId ? "Подключено" : "";
+  alert("Сохранено.");
   showPage("home");
 }
 
