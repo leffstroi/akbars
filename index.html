@@ -6,268 +6,64 @@
 <title>Акбарс — Онлайн-заказы</title>
 <style>
 :root {
-  --accent: #1e40af;
-  --accent-hover: #1d4ed8;
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --success: #059669;
+  --accent: #0071e3;
+  --bg: #fbfbfd;
+  --card: #fff;
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --border: #d2d2d7;
+  --radius: 12px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.5;
-}
-header {
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0;
-  background: rgba(248,250,252,.95);
-  backdrop-filter: blur(10px);
-  z-index: 100;
-}
-.logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; cursor: pointer; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif; font-size: 15px; line-height: 1.4; }
+header { padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(251,251,253,.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.25rem; font-weight: 600; cursor: pointer; }
 .logo span { color: var(--accent); }
-nav { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-nav a, nav button.linkish {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 0.92rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color .2s;
-}
-nav a:hover, nav button.linkish:hover { color: var(--text); }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent);
-  color: #ffffff;
-  border: none;
-  padding: 0.55rem 1.1rem;
-  border-radius: 9px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: transform .15s, box-shadow .15s;
-  text-decoration: none;
-}
-.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(30,64,175,.25); }
-.btn-outline {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-outline:hover { background: #f1f5f9; box-shadow: none; }
-.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.82rem; }
-.hero {
-  padding: 2.8rem 1.5rem 1.6rem;
-  text-align: center;
-  max-width: 820px;
-  margin: 0 auto;
-}
-.hero h1 {
-  font-size: clamp(1.9rem, 5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -1px;
-  line-height: 1.1;
-  margin-bottom: 0.7rem;
-}
-.hero p { color: var(--muted); font-size: 1.02rem; max-width: 460px; margin: 0 auto 1.3rem; }
-.categories {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0 1.5rem 1.1rem;
-}
-.cat-btn {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.38rem 0.9rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.84rem;
-  transition: all .2s;
-}
-.cat-btn.active, .cat-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.venues {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  padding: 0 1.5rem 2.5rem;
-  max-width: 1060px;
-  margin: 0 auto;
-}
-.venue-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform .2s, box-shadow .2s;
-}
-.venue-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(15,23,42,.08);
-}
-.venue-img {
-  height: 140px;
-  background-size: cover;
-  background-position: center;
-  background-color: #f1f5f9;
-}
-.venue-info { padding: 0.85rem; }
-.venue-info h3 { font-size: 1rem; margin-bottom: 0.1rem; }
-.venue-info p { color: var(--muted); font-size: 0.78rem; }
-.badge {
-  display: inline-block;
-  background: rgba(30,64,175,.1);
-  color: var(--accent);
-  font-size: 0.68rem;
-  padding: 0.1rem 0.38rem;
-  border-radius: 4px;
-  margin-top: 0.3rem;
-}
-.map-link {
-  display: inline-block;
-  margin-top: 0.45rem;
-  font-size: 0.78rem;
-  color: var(--accent);
-  text-decoration: none;
-}
-.map-link:hover { text-decoration: underline; }
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(15,23,42,.45);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
+nav { display: flex; gap: 1rem; align-items: center; font-size: 0.9rem; }
+nav a, nav button { color: var(--muted); background: none; border: none; cursor: pointer; text-decoration: none; }
+nav a:hover, nav button:hover { color: var(--text); }
+.btn { background: var(--accent); color: #fff; border: none; padding: 0.45rem 0.9rem; border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.hero { padding: 1.5rem 1.25rem 1rem; max-width: 1100px; margin: 0 auto; }
+.hero h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.3rem; }
+.hero p { color: var(--muted); font-size: 0.95rem; }
+.categories { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0.5rem 1.25rem 1rem; max-width: 1100px; margin: 0 auto; }
+.cat-btn { background: #fff; border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; cursor: pointer; }
+.cat-btn.active, .cat-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.venues { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; padding: 0 1.25rem 2rem; max-width: 1100px; margin: 0 auto; }
+.venue-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: box-shadow .15s; }
+.venue-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.venue-img { height: 100px; background-size: cover; background-position: center; background-color: #f5f5f7; }
+.venue-info { padding: 0.65rem 0.75rem; }
+.venue-info h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.15rem; }
+.venue-info p { color: var(--muted); font-size: 0.75rem; line-height: 1.3; }
+.badge { display: inline-block; background: #f5f5f7; color: var(--muted); font-size: 0.65rem; padding: 0.1rem 0.35rem; border-radius: 4px; margin-top: 0.25rem; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 200; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
 .modal.open { display: flex; }
-.modal-content {
-  background: var(--card);
-  border-radius: 16px;
-  max-width: 500px;
-  width: 100%;
-  max-height: 86vh;
-  overflow-y: auto;
-  padding: 1.3rem;
-  border: 1px solid var(--border);
-}
-.close {
-  float: right;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1.3rem;
-  cursor: pointer;
-}
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.menu-item button {
-  background: var(--accent);
-  color: #ffffff;
-  border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.cart { margin-top: 1rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
-.order-form input, .order-form textarea, .order-form select {
-  width: 100%;
-  background: #f8fafc;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.65rem;
-  border-radius: 8px;
-  margin-bottom: 0.55rem;
-  font-size: 0.92rem;
-}
-footer {
-  text-align: center;
-  padding: 1.2rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  border-top: 1px solid var(--border);
-}
-.auth-modal .modal-content { max-width: 380px; text-align: center; }
-.auth-modal h2 { margin-bottom: 0.6rem; }
-.create-section, .guide-section {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-.create-section h2, .guide-section h2 { margin-bottom: 0.8rem; }
-.create-section input, .create-section select, .create-section textarea {
-  width: 100%;
-  background: #f8fafc;
-  border: 1px solid var(--border);
-  padding: 0.65rem;
-  border-radius: 8px;
-  margin-bottom: 0.6rem;
-  font-size: 0.92rem;
-}
-.menu-builder-item {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-.menu-builder-item input { flex: 1; margin-bottom: 0; }
-.guide-block {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.1rem;
-  margin-bottom: 1rem;
-}
-.guide-block h3 { margin-bottom: 0.5rem; color: var(--accent); }
-.guide-block p { margin-bottom: 0.4rem; font-size: 0.92rem; }
+.modal-content { background: #fff; border-radius: 16px; max-width: 480px; width: 100%; margin: 1rem auto; padding: 1rem 1.1rem; max-height: 90vh; overflow-y: auto; }
+.close { float: right; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); }
+.menu-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid #f0f0f2; font-size: 0.9rem; }
+.menu-item button { background: var(--accent); color: #fff; border: none; width: 24px; height: 24px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+.cart { margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+.order-form input, .order-form select, .order-form textarea { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.45rem; font-size: 0.9rem; background: #fbfbfd; }
+footer { text-align: center; padding: 1rem; color: var(--muted); font-size: 0.75rem; border-top: 1px solid var(--border); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-
 <header>
   <div class="logo" onclick="showPage('home')">Ак<span>барс</span></div>
   <nav>
-    <a href="#" onclick="showPage('home'); return false;">Заведения</a>
-    <button class="btn btn-outline btn-sm" onclick="openAuth('login')">Войти</button>
-    <button class="btn btn-sm" onclick="openAuth('register')">Регистрация</button>
+    <a href="#" onclick="showPage('home');return false;">Заведения</a>
+    <button class="btn btn-outline" onclick="openAuth('login')">Войти</button>
+    <button class="btn" onclick="openAuth('register')">Регистрация</button>
   </nav>
 </header>
-
 <div id="page-home">
   <section class="hero">
     <h1>Акбарс</h1>
-    <p>Заведения Бишкека</p>
-    <button class="btn" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">Смотреть</button>
+    <p>Онлайн-заказы для кафе, ресторанов и барбершопов Бишкека</p>
   </section>
-
   <div class="categories">
     <button class="cat-btn active" data-cat="all">Все</button>
     <button class="cat-btn" data-cat="cafe">Кафе</button>
@@ -275,59 +71,11 @@ footer {
     <button class="cat-btn" data-cat="barber">Барбершопы</button>
     <button class="cat-btn" data-cat="shop">Магазины</button>
   </div>
-
   <section class="venues" id="venues"></section>
 </div>
-
-<div id="page-guide" style="display:none;">
-  <div class="guide-section">
-    <button class="btn" onclick="showPage('home')">Назад</button>
-  </div>
-</div>
-
-<div id="page-create" style="display:none;">
-  <div class="create-section">
-    <h2>Добавить заведение</h2>
-    <input type="text" id="bizName" placeholder="Название заведения">
-    <select id="bizCat">
-      <option value="cafe">Кафе</option>
-      <option value="restaurant">Ресторан</option>
-      <option value="barber">Барбершоп</option>
-      <option value="shop">Магазин</option>
-    </select>
-    <input type="text" id="bizDesc" placeholder="Адрес">
-    <h3 style="margin:1rem 0 0.5rem;font-size:1rem;">Меню</h3>
-    <div id="menuBuilder"></div>
-    <button class="btn btn-outline" style="margin-bottom:1rem;" onclick="addMenuRow()">+ Добавить позицию</button>
-    <h3 style="margin:1.2rem 0 0.5rem;font-size:1rem;">Telegram</h3>
-    <a href="https://t.me/AkBarsOrdersBot?start=connect" target="_blank" class="btn btn-outline" style="margin-bottom:0.6rem;display:inline-block;">Подключить</a>
-    <input type="text" id="telegramId" placeholder="Chat ID">
-    <div id="telegramStatus" style="font-size:0.85rem;color:var(--accent);margin-bottom:1rem;"></div>
-    <button class="btn" style="width:100%;" onclick="saveVenue()">Сохранить</button>
-  </div>
-</div>
-
-<footer>Акбарс · Команда 67 · SkillLab AI Hackathon 2026</footer>
-
-<div class="modal auth-modal" id="authModal">
-  <div class="modal-content">
-    <button class="close" onclick="closeAuth()">&times;</button>
-    <h2 id="authTitle">Вход</h2>
-    <div class="order-form">
-      <input type="email" placeholder="Email">
-      <input type="password" placeholder="Пароль">
-      <button class="btn" style="width:100%;margin-top:0.4rem;" onclick="fakeAuth()">Продолжить</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <button class="close" onclick="closeModal()">&times;</button>
-    <div id="modal-body"></div>
-  </div>
-</div>
-
+<footer>Акбарс · Команда 67</footer>
+<div class="modal" id="modal"><div class="modal-content"><button class="close" onclick="closeModal()">&times;</button><div id="modal-body"></div></div></div>
+<div class="modal auth-modal" id="authModal"><div class="modal-content"><button class="close" onclick="closeAuth()">&times;</button><h2 id="authTitle">Вход</h2><div class="order-form"><input type="email" placeholder="Email"><input type="password" placeholder="Пароль"><button class="btn" style="width:100%;" onclick="fakeAuth()">Продолжить</button></div></div></div>
 <script>
 const venues = [
   { id:1, name:"Navat", cat:"restaurant", type:"Чайхана", desc:"Национальная кухня · Тоголок Молдо, 114/1", img:"https://img4.restaurantguru.com/w550/h367/r233-design-Navat-2026-05-2.jpg", map:"https://maps.google.com/?q=Navat+Togolok+Moldo+114+Bishkek", menu:[{name:"Плов",price:320},{name:"Лагман",price:280},{name:"Шашлык",price:420},{name:"Самса",price:70},{name:"Чай",price:40}] },
@@ -341,243 +89,62 @@ const venues = [
   { id:9, name:"Green Market", cat:"shop", type:"Магазин", desc:"Продукты · Бишкек", img:"https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80", map:"https://maps.google.com/?q=supermarket+Bishkek", menu:[{name:"Молоко 1 л",price:90},{name:"Хлеб",price:35},{name:"Яйца 10 шт",price:130},{name:"Сыр",price:200}] },
   { id:10, name:"Фрунзе", cat:"restaurant", type:"Ресторан", desc:"Авторская кухня · Абдумомунова, 220а", img:"https://media-cdn.tripadvisor.com/media/photo-m/1280/0c/a6/8a/72/restaurant-frunze.jpg", map:"https://maps.google.com/?q=Frunze+restaurant+Abdumomunova+220+Bishkek", menu:[{name:"Стейк",price:1200},{name:"Салат",price:450},{name:"Суп дня",price:380}] }
 ];
-
-let cart = [];
-let currentVenue = null;
-let currentTable = null;
-
+let cart = []; let currentVenue = null; let currentTable = null;
 const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.has('venue')) {
-  const vid = parseInt(urlParams.get('venue'));
-  currentTable = urlParams.get('table') || '1';
-  setTimeout(() => openVenue(vid), 100);
-}
-
+if (urlParams.has('venue')) { const vid = parseInt(urlParams.get('venue')); currentTable = urlParams.get('table') || '1'; setTimeout(() => openVenue(vid), 100); }
 function renderVenues(filter = "all") {
   const el = document.getElementById("venues");
-  el.innerHTML = venues
-    .filter(v => filter === "all" || v.cat === filter)
-    .map(v => `
-      <div class="venue-card" onclick="openVenue(${v.id})">
-        <div class="venue-img" style="background-image:url('${v.img}')"></div>
-        <div class="venue-info">
-          <h3>${v.name}</h3>
-          <p>${v.desc}</p>
-          <span class="badge">${v.cat === "barber" ? "Запись" : "QR-заказ"}</span>
-          <br>
-          <a class="map-link" href="${v.map}" target="_blank" onclick="event.stopPropagation()">Открыть на карте</a>
-        </div>
+  el.innerHTML = venues.filter(v => filter === "all" || v.cat === filter).map(v => `
+    <div class="venue-card" onclick="openVenue(${v.id})">
+      <div class="venue-img" style="background-image:url('${v.img}')"></div>
+      <div class="venue-info">
+        <h3>${v.name}</h3>
+        <p>${v.desc}</p>
+        <span class="badge">${v.cat === "barber" ? "Запись" : "QR-заказ"}</span>
       </div>
-    `).join("");
+    </div>`).join("");
 }
-
-function openVenue(id) {
-  currentVenue = venues.find(v => v.id === id);
-  if (!currentVenue) return;
-  cart = [];
-  showModal();
-}
-
+function openVenue(id) { currentVenue = venues.find(v => v.id === id); if (!currentVenue) return; cart = []; showModal(); }
 function showModal() {
   const body = document.getElementById("modal-body");
   const isBarber = currentVenue.cat === "barber";
   const isFood = currentVenue.cat === "restaurant" || currentVenue.cat === "cafe";
-  const tableNote = currentTable ? `<div style="background:#f1f5f9;padding:0.5rem;border-radius:8px;margin-bottom:0.7rem;font-size:0.9rem;">Стол ${currentTable} · <button class="btn btn-sm" onclick="callWaiter()" style="margin-left:0.5rem;">Позвать официанта</button></div>` : '';
-  
-  let extraFields = '';
-  if (isFood) {
-    extraFields = `
-      <div style="margin-bottom:0.8rem;">
-        <label style="font-size:0.85rem;color:var(--muted);">Число гостей</label>
-        <select id="guests" style="width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:8px;margin-top:0.2rem;">
-          <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6+">6+</option>
-        </select>
-      </div>
-      <div style="margin-bottom:0.8rem;">
-        <label style="font-size:0.85rem;color:var(--muted);">Тип заказа</label>
-        <select id="orderType" style="width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:8px;margin-top:0.2rem;">
-          <option value="dine">В зале</option><option value="takeaway">Самовывоз</option><option value="delivery">Доставка</option>
-        </select>
-      </div>`;
-  } else if (isBarber) {
-    extraFields = `
-      <div style="margin-bottom:0.8rem;">
-        <label style="font-size:0.85rem;color:var(--muted);">Свободное время</label>
-        <select id="timeSlot" style="width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:8px;margin-top:0.2rem;">
-          <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
-        </select>
-      </div>`;
-  }
-
-  body.innerHTML = `
-    <h2>${currentVenue.name}</h2>
-    <p style="color:var(--muted);margin-bottom:0.7rem;font-size:0.9rem;">${currentVenue.desc}</p>
-    ${tableNote}
-    ${extraFields}
-    <div>
-      ${currentVenue.menu.map((item, i) => `
-        <div class="menu-item">
-          <div>
-            <div>${item.name}</div>
-            <div style="color:var(--muted);font-size:0.8rem;">${item.price} сом</div>
-            ${isFood ? `<div style="font-size:0.75rem;margin-top:0.2rem;"><label><input type="checkbox" class="mod" data-item="${i}" data-mod="no-onion" style="margin-right:0.3rem;">без лука</label> <label style="margin-left:0.5rem;"><input type="checkbox" class="mod" data-item="${i}" data-mod="extra-sauce" style="margin-right:0.3rem;">доп. соус +30</label></div>` : ''}
-            ${isBarber && item.name.toLowerCase().includes('стриж') ? `<div style="font-size:0.75rem;margin-top:0.2rem;"><label><input type="checkbox" class="mod" data-item="${i}" data-mod="beard" style="margin-right:0.3rem;">+ борода</label></div>` : ''}
-          </div>
-          <div style="display:flex;align-items:center;gap:0.3rem;">
-            <button onclick="changeQty(${i}, -1)" style="width:24px;height:24px;border-radius:4px;">−</button>
-            <span id="qty-${i}">0</span>
-            <button onclick="changeQty(${i}, 1)" style="width:24px;height:24px;border-radius:4px;">+</button>
-          </div>
-        </div>
-      `).join("")}
-    </div>
-    <div class="cart" id="cart-section"></div>
-    <div id="qr-section" style="margin-top:1rem;text-align:center;"></div>
-    <a class="map-link" href="${currentVenue.map}" target="_blank" style="margin-top:0.8rem;display:inline-block;">Открыть на карте</a>
-  `;
-  document.getElementById("modal").classList.add("open");
-  updateCart();
-  generateQR();
+  let extra = '';
+  if (isFood) extra = `<div style="margin:0.6rem 0;"><label style="font-size:0.8rem;color:var(--muted);">Гостей</label><select id="guests" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:6px;margin-top:0.2rem;"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select><label style="font-size:0.8rem;color:var(--muted);display:block;margin-top:0.4rem;">Тип</label><select id="orderType" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:6px;margin-top:0.2rem;"><option>В зале</option><option>Самовывоз</option><option>Доставка</option></select></div>`;
+  else if (isBarber) extra = `<div style="margin:0.6rem 0;"><label style="font-size:0.8rem;color:var(--muted);">Время</label><select id="timeSlot" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:6px;margin-top:0.2rem;"><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>`;
+  body.innerHTML = `<h2 style="font-size:1.15rem;margin-bottom:0.3rem;">${currentVenue.name}</h2><p style="color:var(--muted);font-size:0.8rem;margin-bottom:0.6rem;">${currentVenue.desc}</p>${extra}<div>${currentVenue.menu.map((item,i)=>`<div class="menu-item"><div><div>${item.name}</div><div style="color:var(--muted);font-size:0.75rem;">${item.price} сом</div>${isFood?`<div style="font-size:0.7rem;margin-top:0.15rem;"><label><input type="checkbox" style="margin-right:0.2rem;">без лука</label> <label style="margin-left:0.4rem;"><input type="checkbox" style="margin-right:0.2rem;">доп. соус</label></div>`:''}${isBarber&&item.name.toLowerCase().includes('стриж')?`<div style="font-size:0.7rem;margin-top:0.15rem;"><label><input type="checkbox" style="margin-right:0.2rem;">+ борода</label></div>`:''}</div><div style="display:flex;align-items:center;gap:0.25rem;"><button onclick="changeQty(${i},-1)">−</button><span id="qty-${i}">0</span><button onclick="changeQty(${i},1)">+</button></div></div>`).join('')}</div><div class="cart" id="cart-section"></div>`;
+  document.getElementById("modal").classList.add("open"); updateCart();
 }
-
 function changeQty(index, delta) {
   const item = currentVenue.menu[index];
   let existing = cart.find(c => c.name === item.name);
-  if (delta > 0) {
-    if (!existing) {
-      cart.push({ ...item, qty: 1 });
-    } else {
-      existing.qty++;
-    }
-  } else if (existing) {
-    existing.qty--;
-    if (existing.qty <= 0) {
-      cart = cart.filter(c => c.name !== item.name);
-    }
-  }
+  if (delta > 0) { if (!existing) cart.push({...item, qty:1}); else existing.qty++; }
+  else if (existing) { existing.qty--; if (existing.qty <= 0) cart = cart.filter(c => c.name !== item.name); }
   const q = cart.find(c => c.name === item.name);
-  document.getElementById(`qty-${index}`).textContent = q ? q.qty : 0;
-  updateCart();
+  document.getElementById(`qty-${index}`).textContent = q ? q.qty : 0; updateCart();
 }
-
-function generateQR() {
-  const qrEl = document.getElementById("qr-section");
-  if (!qrEl || typeof QRCode === 'undefined') return;
-  const base = window.location.origin + window.location.pathname;
-  const url = `${base}?venue=${currentVenue.id}&table=1`;
-  qrEl.innerHTML = '<div id="qrcode"></div>';
-  new QRCode(document.getElementById("qrcode"), {
-    text: url,
-    width: 128,
-    height: 128,
-    colorDark: "#0f172a",
-    colorLight: "#FFFFFF",
-    correctLevel: QRCode.CorrectLevel.M
-  });
-}
-
-function callWaiter() {
-  alert(`Официант вызван к столу ${currentTable}.`);
-}
-
 function updateCart() {
   const section = document.getElementById("cart-section");
   if (!section) return;
-  if (cart.length === 0) {
-    section.innerHTML = "<p style='color:var(--muted);font-size:0.9rem;'>Корзина пуста</p>";
-    return;
-  }
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  section.innerHTML = `
-    <h3 style="margin-bottom:0.5rem;font-size:1rem;">Ваш заказ</h3>
-    ${cart.map(i => `<div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.9rem;"><span>${i.name} × ${i.qty}</span><span>${i.price * i.qty} сом</span></div>`).join("")}
-    <div style="font-weight:600;margin:0.5rem 0;">Итого: ${total} сом</div>
-    <div class="order-form">
-      <input type="text" id="clientName" placeholder="Ваше имя">
-      <input type="text" id="clientPhone" placeholder="Телефон">
-      <textarea id="clientComment" placeholder="Комментарий" rows="2"></textarea>
-      <button class="btn" style="width:100%;" onclick="placeOrder()">Оформить ${currentVenue.cat === "barber" ? "запись" : "заказ"}</button>
-    </div>
-  `;
+  if (cart.length === 0) { section.innerHTML = "<p style='color:var(--muted);font-size:0.85rem;'>Корзина пуста</p>"; return; }
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  section.innerHTML = `<h3 style="font-size:0.95rem;margin-bottom:0.4rem;">Заказ</h3>${cart.map(i=>`<div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.2rem;"><span>${i.name} × ${i.qty}</span><span>${i.price*i.qty} сом</span></div>`).join('')}<div style="font-weight:600;margin:0.4rem 0;">Итого: ${total} сом</div><div class="order-form"><input id="clientName" placeholder="Имя"><input id="clientPhone" placeholder="Телефон"><textarea id="clientComment" placeholder="Комментарий" rows="2"></textarea><button class="btn" style="width:100%;" onclick="placeOrder()">Оформить</button></div>`;
 }
-
 function placeOrder() {
   const name = document.getElementById("clientName").value.trim();
   const phone = document.getElementById("clientPhone").value.trim();
   if (!name || !phone) { alert("Укажите имя и телефон"); return; }
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const tableInfo = currentTable ? ` (стол ${currentTable})` : '';
-  const guests = document.getElementById("guests") ? document.getElementById("guests").value : '';
-  const timeSlot = document.getElementById("timeSlot") ? document.getElementById("timeSlot").value : '';
-  const extra = guests ? ` · ${guests} гостей` : (timeSlot ? ` · ${timeSlot}` : '');
-  document.getElementById("modal-body").innerHTML = `
-    <div style="text-align:center;padding:1.2rem 0;">
-      <h3 style="color:var(--accent);">Заказ принят</h3>
-      <p style="margin:0.5rem 0;">${currentVenue.name}${tableInfo}${extra}</p>
-      <p>Сумма: ${total} сом</p>
-      <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">Заказ принят.</p>
-      <button class="btn" style="margin-top:1rem;" onclick="closeModal()">Закрыть</button>
-    </div>
-  `;
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById("modal-body").innerHTML = `<div style="text-align:center;padding:1rem 0;"><h3 style="color:var(--accent);">Принято</h3><p>${currentVenue.name}</p><p>Сумма: ${total} сом</p><button class="btn" style="margin-top:0.8rem;" onclick="closeModal()">Закрыть</button></div>`;
 }
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("open");
-}
-
-function openAuth(type) {
-  document.getElementById("authTitle").textContent = type === "login" ? "Вход" : "Регистрация";
-  document.getElementById("authModal").classList.add("open");
-}
-function closeAuth() {
-  document.getElementById("authModal").classList.remove("open");
-}
-function fakeAuth() {
-  alert("Вход будет доступен после подключения базы данных");
-  closeAuth();
-}
-
-function showPage(page) {
-  document.getElementById("page-home").style.display = page === "home" ? "block" : "none";
-  document.getElementById("page-guide").style.display = page === "guide" ? "block" : "none";
-  document.getElementById("page-create").style.display = page === "create" ? "block" : "none";
-  if (page === "create" && document.getElementById("menuBuilder").children.length === 0) {
-    addMenuRow();
-    addMenuRow();
-  }
-  window.scrollTo(0, 0);
-}
-
-function addMenuRow() {
-  const div = document.createElement("div");
-  div.className = "menu-builder-item";
-  div.innerHTML = `
-    <input type="text" placeholder="Название" class="mi-name">
-    <input type="number" placeholder="Цена" class="mi-price" style="max-width:100px;">
-  `;
-  document.getElementById("menuBuilder").appendChild(div);
-}
-
-function saveVenue() {
-  const name = document.getElementById("bizName").value.trim();
-  const tgId = document.getElementById("telegramId").value.trim();
-  if (!name) { alert("Укажите название"); return; }
-  document.getElementById("telegramStatus").textContent = tgId ? "Подключено" : "";
-  alert("Сохранено.");
-  showPage("home");
-}
-
-document.querySelectorAll(".cat-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    renderVenues(btn.dataset.cat);
-  });
-});
-
-document.getElementById("modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
-document.getElementById("authModal").addEventListener("click", e => { if (e.target.id === "authModal") closeAuth(); });
-
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
+function openAuth(t) { document.getElementById("authTitle").textContent = t==="login"?"Вход":"Регистрация"; document.getElementById("authModal").classList.add("open"); }
+function closeAuth() { document.getElementById("authModal").classList.remove("open"); }
+function fakeAuth() { alert("После подключения базы"); closeAuth(); }
+function showPage(p) { document.getElementById("page-home").style.display = p==="home"?"block":"none"; }
+document.querySelectorAll(".cat-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderVenues(btn.dataset.cat); }); });
+document.getElementById("modal").addEventListener("click", e => { if (e.target.id==="modal") closeModal(); });
+document.getElementById("authModal").addEventListener("click", e => { if (e.target.id==="authModal") closeAuth(); });
 renderVenues();
 </script>
 </body>
